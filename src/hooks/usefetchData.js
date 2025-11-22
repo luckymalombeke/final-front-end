@@ -1,52 +1,59 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from 'react';
+import api from '../api/client';
 
-export default function useFetchData(endpoint) {
-  const BASE_URL = "http://localhost:3000";
-  const URL = `${BASE_URL}/${endpoint}`;
-
+export default function useFetchData(resource) {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // GET (Fetch All)
-  const fetchData = async () => {
-    const res = await fetch(URL);
-    const json = await res.json();
-    setData(json);
-  };
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await api.get(`/${resource}`);
+      setData(response.data || []);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [resource]);
 
-  // POST (Create)
-  const createData = async (item) => {
-    await fetch(URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(item),
-    });
-    fetchData();
-  };
+  const createData = useCallback(
+    async (item) => {
+      await api.post(`/${resource}`, item);
+      await fetchData();
+    },
+    [resource, fetchData],
+  );
 
-  // PUT (Update)
-  const updateData = async (id, item) => {
-    await fetch(`${URL}/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(item),
-    });
-    fetchData();
-  };
+  const updateData = useCallback(
+    async (id, item) => {
+      await api.put(`/${resource}/${id}`, item);
+      await fetchData();
+    },
+    [resource, fetchData],
+  );
 
-  // DELETE (Remove)
-  const deleteData = async (id) => {
-    await fetch(`${URL}/${id}`, { method: "DELETE" });
-    fetchData();
-  };
+  const deleteData = useCallback(
+    async (id) => {
+      await api.delete(`/${resource}/${id}`);
+      await fetchData();
+    },
+    [resource, fetchData],
+  );
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   return {
     data,
+    loading,
+    error,
     createData,
     updateData,
     deleteData,
+    refresh: fetchData,
   };
 }

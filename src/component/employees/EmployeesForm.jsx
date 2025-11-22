@@ -1,13 +1,23 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from 'react';
+import Button from '../../components/ui/Button';
+import Card from '../../components/ui/Card';
+import Input from '../../components/ui/Input';
 
 export default function EmployeesForm({ onSubmit, editingData }) {
   const [form, setForm] = useState({
-    name: "",
-    role: "",
+    name: '',
+    role: '',
   });
 
   useEffect(() => {
-    if (editingData) setForm(editingData);
+    if (editingData) {
+      setForm({
+        name: editingData.name || '',
+        role: editingData.role || '',
+      });
+    } else {
+      setForm({ name: '', role: '' });
+    }
   }, [editingData]);
 
   const handleChange = (e) => {
@@ -17,17 +27,41 @@ export default function EmployeesForm({ onSubmit, editingData }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(form);
-    setForm({ name: "", role: "" });
+    if (!editingData) {
+      setForm({ name: '', role: '' });
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input name="name" placeholder="Employee Name" value={form.name} onChange={handleChange} />
-      <input name="role" placeholder="Role" value={form.role} onChange={handleChange} />
+    <Card
+      title={editingData ? 'Edit Employee' : 'New Employee'}
+      description="Register and manage your operational team."
+    >
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-2">
+          <Input
+            label="Employee Name"
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            placeholder="Enter employee name"
+            required
+          />
+          <Input
+            label="Role"
+            name="role"
+            value={form.role}
+            onChange={handleChange}
+            placeholder="e.g. Washer, Cashier, Manager"
+          />
+        </div>
 
-      <button type="submit">
-        {editingData ? "Update Employee" : "Add Employee"}
-      </button>
-    </form>
+        <div className="flex justify-end gap-3 pt-4 border-t border-gray/50">
+          <Button type="submit" variant="primary">
+            {editingData ? 'Update Employee' : 'Add Employee'}
+          </Button>
+        </div>
+      </form>
+    </Card>
   );
 }

@@ -1,0 +1,65 @@
+{
+  "customers": [
+    {
+      "id": 1,
+      "name": "Andi Saputra",
+      "phone": "081234567890",
+      "vehicle": "Toyota Avanza",
+      "plate": "DB 1234 XY"
+    },
+    {
+      "id": 2,
+      "name": "Linda Makarawung",
+      "phone": "081245678921",
+      "vehicle": "Honda Brio",
+      "plate": "DB 9876 QZ"
+    }
+  ],
+  "services": [
+    {
+      "id": 1,
+      "name": "Cuci Mobil Exterior",
+      "price": 30000
+    },
+    {
+      "id": 2,
+      "name": "Cuci Mobil Full Service",
+      "price": 60000
+    },
+    {
+      "id": 3,
+      "name": "Cuci Salon Interior",
+      "price": 150000
+    }
+  ],
+  "employees": [
+    {
+      "id": 1,
+      "name": "Roni",
+      "role": "Cleaner"
+    },
+    {
+      "id": 2,
+      "name": "Samuel",
+      "role": "Cashier"
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "customerId": 1,
+      "serviceId": 2,
+      "employeeId": 1,
+      "status": "completed",
+      "date": "2025-02-01T10:30:00"
+    },
+    {
+      "id": 2,
+      "customerId": 2,
+      "serviceId": 1,
+      "employeeId": 1,
+      "status": "pending",
+      "date": "2025-02-02T14:00:00"
+    }
+  ]
+}
